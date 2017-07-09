@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/wiless/gsub"
@@ -24,9 +25,20 @@ func GStop() {
 
 func main() {
 	defer GStop() // Ensure to call Stop() function when main() routine ends/terminates
-	gsub.StartWebService("./")
+	gsub.StartWebService("./web")
+	// tlogger := gusb.NewHttpLogger("Temperature")
+	var tlogger gsub.Logger
+	tlogger.Start("/monitor")
+	go gsub.StartServer()
+	queue := tlogger.Queue()
 
-	fmt.Printf("Hello How are you..")
+	var lmsg gsub.LogMessage
+	for {
+		msg := fmt.Sprintf("I am a random number %d ", rand.Intn(100))
+		lmsg = gsub.LogMessage{Level: 1, Message: msg}
+		queue <- lmsg
+		time.Sleep(1 * time.Second)
+	}
 
 	// GStop()
 }

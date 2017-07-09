@@ -29,11 +29,11 @@ func welcomePage(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, tmpl.Name(), info)
 
 }
-func webroot(w http.ResponseWriter, r *http.Request) {
+func serverootfiles(w http.ResponseWriter, r *http.Request) {
 
 	log.Print("Root is here ", r.URL.Path, " escpaed = ", html.EscapeString(r.URL.Path))
 	// fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-	fname := "./" + strings.TrimPrefix(r.URL.Path, "/www")
+	fname := "./web" + strings.TrimPrefix(r.URL.Path, "/www")
 	// if fname != "" {
 	http.ServeFile(w, r, fname)
 	log.Print("Will server this file ", fname)

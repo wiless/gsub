@@ -11,18 +11,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var router *mux.Router
+var webrootdir = "./"
+
 //StartWebService start a http server at "root" location
 func StartWebService(root string) {
-
+	webrootdir = root
 	adrs, _ := net.InterfaceAddrs()
 	for _, adr := range adrs {
-		fmt.Printf("\n Open http://%v:%v", strings.Split(adr.String(), "/")[0], ":8888")
+		fmt.Printf("\n Open http://%v%v", strings.Split(adr.String(), "/")[0], ":8888")
 	}
 
 	log.Println("Starting Web Server...")
 	// http.ListenAndServe(":8888", http.FileServer(http.Dir(root)))
 
-	router := mux.NewRouter().StrictSlash(true)
+	router = mux.NewRouter().StrictSlash(true)
 
 	// Set API paths
 	// router.HandleFunc("/api/apps", handleApps).Methods("GET")
@@ -30,13 +33,16 @@ func StartWebService(root string) {
 
 	//Set Statick service
 	//Approach 1
-	router.PathPrefix("/www").HandlerFunc(webroot)
+	router.PathPrefix("/www").HandlerFunc(serverootfiles)
 	//Approah 2
 	//router.PathPrefix("/www").Handler(http.StripPrefix("/www", http.FileServer(http.Dir("."))))
 
 	// Set API paths
 	router.HandleFunc("/", welcomePage)
 
+}
+
+func StartServer() {
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
 
@@ -46,3 +52,7 @@ func landingPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome Mr. %s", r.Host)
 	// w.WriteHeader(http.StatusAccepted)
 }
+
+// func Attach(l *Logger){
+// 	router
+// }
